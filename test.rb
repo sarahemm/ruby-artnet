@@ -1,7 +1,5 @@
 #!/usr/bin/ruby
 
-require 'socket'
-require 'ipaddr'
 require 'lib/artnet/io.rb'
 require 'lib/artnet/node.rb'
 

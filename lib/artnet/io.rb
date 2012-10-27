@@ -1,3 +1,5 @@
+require 'ipaddr'
+require 'socket'
 module ArtNet
   class IO
     attr_reader   :rx_data, :nodes
