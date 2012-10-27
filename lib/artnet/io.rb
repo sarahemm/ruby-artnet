@@ -40,7 +40,8 @@ module ArtNet
       seq = 0
       phy = 0
       data = @tx_data[uni][subuni]
-      length = data.length
+      data.shift  # element zero isn't used for anything as that's traditionally "start code"
+      length = data.length-1
       packet_items = [id, opcode, protver, seq, phy, subuni, uni, length]
       packet_items += data
       packet = packet_items.pack "a7xvnCCCCnC#{length}"
