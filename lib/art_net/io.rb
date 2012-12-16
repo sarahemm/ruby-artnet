@@ -5,16 +5,13 @@ module ArtNet
     attr_reader   :rx_data, :nodes
     attr_accessor :tx_data
 
-    def initialize(options)
-      @port = options[:port] || 6454
+    def initialize(options = {})
+      @port    = options[:port] || 6454
       @network = options[:network] || "2.0.0.0"
       @netmask = options[:netmask] || "255.255.255.0"
-      @broadcast = get_broadcast_ip @network, @netmask
+      @broadcast_ip = get_broadcast_ip @network, @netmask
       @local_ip = get_local_ip @network
-      @udp = UDPSocket.new
-      @udp.bind "0.0.0.0", @port
-      @udp_bcast = UDPSocket.new
-      @udp_bcast.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
+      setup_connection
       @rx_data = Array.new(4) { Array.new(4, [] ) }
       @tx_data = Array.new(4) { Array.new(4, Array.new(512, 0) ) }
       @nodes = Array.new
@@ -45,7 +42,7 @@ module ArtNet
       packet_items = [id, opcode, protver, seq, phy, subuni, uni, length]
       packet_items += data
       packet = packet_items.pack "a7xvnCCCCnC#{length}"
-      @udp_bcast.send packet, 0, @broadcast, @port
+      @udp_bcast.send packet, 0, @broadcast_ip, @port
     end
     
     # send an ArtPoll packet
@@ -57,7 +54,7 @@ module ArtNet
       id = 'Art-Net'
       opcode = 0x2000 # OpPoll
       protver = 14
-      @udp_bcast.send [id, opcode, protver, 0, 0].pack("a7xvnCC"), 0, @broadcast, @port
+      @udp_bcast.send [id, opcode, protver, 0, 0].pack("a7xvnCC"), 0, @broadcast_ip, @port
     end
     
     private 
@@ -92,6 +89,14 @@ module ArtNet
           puts "Received unknown opcode 0x#{opcode.to_s(16)}"
       end
     end
+
+    def setup_connection
+      @udp = UDPSocket.new
+      @udp.bind "0.0.0.0", @port
+      @udp_bcast = UDPSocket.new
+      @udp_bcast.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
+    end
+
   end
   
   class PacketFormatError < RuntimeError
