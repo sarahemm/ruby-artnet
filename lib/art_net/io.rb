@@ -85,6 +85,7 @@ module ArtNet
           (seq, phy, subuni, uni, length) = data.unpack "@12CCCCn"
           dmxdata = data.unpack "@18C#{length}"
           @rx_data[uni][subuni][0..dmxdata.length] = dmxdata
+        when 0x2000 # OpPoll / ArtPoll
         else
           puts "Received unknown opcode 0x#{opcode.to_s(16)}"
       end
