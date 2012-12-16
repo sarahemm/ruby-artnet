@@ -36,7 +36,7 @@ module ArtNet
       protver = 14
       seq = 0
       phy = 0
-      data = @tx_data[uni][subuni]
+      data = @tx_data[uni][subuni].dup
       data.shift  # element zero isn't used for anything as that's traditionally "start code"
       length = data.length-1
       packet_items = [id, opcode, protver, seq, phy, subuni, uni, length]
