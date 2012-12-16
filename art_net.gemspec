@@ -15,6 +15,8 @@ spec = Gem::Specification.new do |s|
   #s.extra_rdoc_files = [
   #  "README"
   #]
+  s.add_development_dependency 'rspec', '~> 2.12'
+  s.add_development_dependency 'autotest', '~> 4.4'
 
   s.authors = ["Sen"]
 
