@@ -1,4 +1,4 @@
-require File.expand_path('../lib/artnet/version', __FILE__)
+require File.expand_path('../lib/art_net/version', __FILE__)
 
 spec = Gem::Specification.new do |s|
   s.name = 'ruby-artnet'
@@ -21,9 +21,9 @@ spec = Gem::Specification.new do |s|
   # ruby -rpp -e' pp `git ls-files`.split("\n") '
   s.files = [
     "README.md",
-    "ruby-artnet.gemspec",
-    "lib/artnet/io.rb",
-    "lib/artnet/node.rb",
-    "lib/artnet/version.rb",
+    "art_net.gemspec",
+    "lib/art_net/io.rb",
+    "lib/art_net/node.rb",
+    "lib/art_net/version.rb",
   ]
 end
