@@ -76,7 +76,7 @@ module ArtNet
       (id, opcode, protver) = data.unpack "Z7xSn"
       raise PacketFormatError unless id == "Art-Net"
       case opcode
-        when 0x2000 # OpPoll
+        when 0x2000 # OpPoll / ArtPoll
         when 0x2100 # OpPollReply
           node = ArtNet::Node.new
           node.ip = data.unpack("@10CCCC").join(".")
@@ -91,7 +91,6 @@ module ArtNet
           (seq, phy, subuni, uni, length) = data.unpack "@12CCCCn"
           dmxdata = data.unpack "@18C#{length}"
           @rx_data[uni][subuni][0..dmxdata.length] = dmxdata
-        when 0x2000 # OpPoll / ArtPoll
         else
           puts "Received unknown opcode 0x#{opcode.to_s(16)}"
       end
