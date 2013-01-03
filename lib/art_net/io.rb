@@ -76,10 +76,16 @@ module ArtNet
       (id, opcode, protver) = data.unpack "Z7xSn"
       raise PacketFormatError unless id == "Art-Net"
       case opcode
+        when 0x2000 # OpPoll
         when 0x2100 # OpPollReply
           node = ArtNet::Node.new
           node.ip = data.unpack("@10CCCC").join(".")
-          (node.uni, node.subuni, node.mfg, node.shortname, node.longname) = data.unpack "@18CCxxxxnZ18Z64"
+          node.swin = Array.new
+          node.swout = Array.new
+          (node.uni, node.subuni, node.mfg, node.shortname, node.longname, node.numports, \
+            node.swin[0], node.swin[1], node.swin[2], node.swin[3],                       \
+            node.swout[0], node.swout[1], node.swout[2], node.swout[3]                    \
+          ) = data.unpack "@18CCxxxxnZ18Z64x64nx4x4x4CCCCCCCC"
           @nodes << node
         when 0x5000 # OpDmx / OpOutput
           (seq, phy, subuni, uni, length) = data.unpack "@12CCCCn"
